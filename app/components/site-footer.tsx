@@ -6,12 +6,12 @@ export function SiteFooter() {
           <img src="/vortex-voice-logo.png" alt="" width={512} height={512} />
           <span>VORTEX <strong>VOICE</strong></span>
         </a>
-        <p>Uma cena por dia. Uma nova versão com a sua voz.</p>
+        <p>Um pack inteiro de cenas. Todas esperando a sua voz.</p>
       </div>
       <nav aria-label="Informações legais">
         <a href="/termos">Termos de uso</a>
         <a href="/privacidade">Privacidade</a>
-        <a href="/comunidade">Comunidade</a>
+        <a href="/#cenas">Cenas</a>
       </nav>
       <small>© 2026 Vortex Voice · Protótipo em desenvolvimento</small>
     </footer>

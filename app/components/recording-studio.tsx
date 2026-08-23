@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { DailyChallenge } from '../../lib/daily-challenge';
+import type { DubScene } from '../../lib/scenes';
 
 type MicState = 'idle' | 'requesting' | 'ready' | 'denied' | 'unsupported';
 type StudioPhase = 'setup' | 'recording' | 'review';
@@ -9,7 +9,7 @@ type Take = { blob: Blob; url: string; durationMs: number };
 
 const meterBars = Array.from({ length: 24 }, (_, index) => index);
 
-export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
+export function RecordingStudio({ challenge }: { challenge: DubScene }) {
   const [phase, setPhase] = useState<StudioPhase>('setup');
   const [micState, setMicState] = useState<MicState>('idle');
   const [micLevel, setMicLevel] = useState(0);
@@ -22,9 +22,6 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
   const [playingTake, setPlayingTake] = useState<string | null>(null);
   const [isReviewing, setIsReviewing] = useState(false);
   const [finished, setFinished] = useState(false);
-  const [caption, setCaption] = useState('Minha versão do desafio de hoje.');
-  const [visibility, setVisibility] = useState<'public' | 'private'>('public');
-  const [publishState, setPublishState] = useState<'idle' | 'publishing' | 'published' | 'auth' | 'error'>('idle');
 
   const streamRef = useRef<MediaStream | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
@@ -232,35 +229,21 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
       ?? 'Sua versão está entrando em cena.';
   }, [challenge.script, sceneTimeMs]);
 
-  const publishSubmission = async () => {
-    if (!allRecorded || publishState === 'publishing') return;
-    setPublishState('publishing');
-    const form = new FormData();
-    form.set('mode', modeTitle === 'Modo caos' ? 'chaos' : 'performance');
-    form.set('visibility', visibility);
-    form.set('caption', caption);
-    challenge.script.forEach((line) => {
+  const downloadTakes = () => {
+    challenge.script.forEach((line, index) => {
       const take = takes[line.id];
-      if (take) form.set(`audio_${line.id}`, take.blob, `${line.id}.webm`);
+      if (!take) return;
+      const link = document.createElement('a');
+      link.href = take.url;
+      link.download = `${challenge.slug}-voz-${index + 1}.webm`;
+      link.click();
     });
-
-    try {
-      const response = await fetch('/api/submissions', { method: 'POST', body: form });
-      if (response.status === 401) {
-        setPublishState('auth');
-        return;
-      }
-      if (!response.ok) throw new Error('publish_failed');
-      setPublishState('published');
-    } catch {
-      setPublishState('error');
-    }
   };
 
   if (phase === 'setup') {
     return (
       <section className="mic-setup" aria-labelledby="mic-title">
-        <div className="studio-step-label"><span>1</span> Preparação do microfone</div>
+          <div className="studio-step-label"><span>1</span> Preparação do microfone</div>
         <div className="mic-visual" aria-hidden="true">
           <span className={`studio-mic ${micState === 'ready' ? 'active' : ''}`} />
           <div className="meter-bars">
@@ -272,7 +255,7 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
         <p className="content-label">TESTE DE SOM</p>
         <h1 id="mic-title">Vamos ouvir sua voz.</h1>
         <p className="mic-description">
-          Permita o acesso ao microfone e fale uma frase. Sua gravação continuará somente neste dispositivo.
+          Permita o acesso ao microfone e faça um teste. Sua gravação continuará somente neste dispositivo.
         </p>
 
         {micState === 'ready' ? (
@@ -332,22 +315,16 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
           <div className="publish-panel" aria-live="polite">
             <div className="review-complete">
               <span>✓</span>
-              <div><strong>Dublagem pronta</strong><small>Escolha como ela aparecerá antes de enviar para a comunidade.</small></div>
+              <div><strong>Dublagem pronta</strong><small>Suas gravações continuam somente neste dispositivo.</small></div>
             </div>
-            {publishState === 'published' ? (
-              <div className="published-success"><span>◆</span><div><strong>Você completou o desafio de hoje!</strong><small>Sua sequência e seu perfil já foram atualizados.</small></div><a href="/comunidade">Ver na comunidade →</a></div>
-            ) : (
-              <div className="publish-fields">
-                <label><span>Legenda</span><input value={caption} maxLength={180} onChange={(event) => setCaption(event.target.value)} /></label>
-                <fieldset><legend>Visibilidade</legend><label><input type="radio" name="visibility" checked={visibility === 'public'} onChange={() => setVisibility('public')} /><span>Pública<small>Aparece na comunidade</small></span></label><label><input type="radio" name="visibility" checked={visibility === 'private'} onChange={() => setVisibility('private')} /><span>Privada<small>Visível apenas no perfil</small></span></label></fieldset>
-                <button className="confirm-button" type="button" onClick={publishSubmission} disabled={publishState === 'publishing'}>{publishState === 'publishing' ? 'Publicando...' : 'Publicar dublagem'} <span aria-hidden="true">→</span></button>
-                {publishState === 'auth' && <p className="publish-error">Entre na sua conta para publicar. <a href="/signin-with-chatgpt?return_to=%2Festudio">Fazer login</a></p>}
-                {publishState === 'error' && <p className="publish-error">Não foi possível publicar agora. Suas tomadas continuam nesta tela; tente novamente.</p>}
-              </div>
-            )}
+            <div className="publish-fields local-export">
+              <p>Baixe suas tomadas de voz para editar, guardar ou compartilhar onde quiser. Nenhuma conta é necessária.</p>
+              <button className="confirm-button" type="button" onClick={downloadTakes}>Baixar minhas falas <span aria-hidden="true">↓</span></button>
+              <a className="secondary-button" href="/#cenas">Escolher outra cena</a>
+            </div>
           </div>
         ) : (
-          <p className="review-help">As três tomadas são reproduzidas automaticamente no momento certo da cena.</p>
+          <p className="review-help">Suas tomadas são reproduzidas automaticamente no momento certo da cena.</p>
         )}
 
         <div className="review-actions">
@@ -367,7 +344,7 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
       <div className="studio-heading-row">
         <div>
           <p className="content-label">ESTÚDIO DE DUBLAGEM</p>
-          <h1 id="recording-title">Grave no seu ritmo.</h1>
+          <h1 id="recording-title">Dê voz à cena inteira.</h1>
         </div>
         <div className="studio-session-meta"><span>{modeTitle}</span><strong>{recordedCount}/{challenge.script.length} falas</strong></div>
       </div>

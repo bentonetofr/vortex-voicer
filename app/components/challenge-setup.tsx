@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import type { DailyChallenge } from '../../lib/daily-challenge';
+import type { DubScene } from '../../lib/scenes';
 
 type ChallengeSetupProps = {
-  challenge: DailyChallenge;
+  challenge: DubScene;
 };
 
 export function ChallengeSetup({ challenge }: ChallengeSetupProps) {
@@ -23,7 +23,7 @@ export function ChallengeSetup({ challenge }: ChallengeSetupProps) {
           <strong>{chosenMode.title}</strong>. Faça um teste rápido do microfone e grave cada fala no seu tempo.
         </p>
         <div className="confirmation-actions">
-          <a className="confirm-button" href={`/estudio?mode=${mode}`}>
+          <a className="confirm-button" href={`/estudio?scene=${challenge.slug}&mode=${mode}`}>
             Entrar no estúdio <span aria-hidden="true">→</span>
           </a>
           <button className="secondary-button" type="button" onClick={() => setConfirmed(false)}>
@@ -66,7 +66,7 @@ export function ChallengeSetup({ challenge }: ChallengeSetupProps) {
       </fieldset>
 
       <div className="role-summary">
-        <span className="role-avatar" aria-hidden="true">LI</span>
+        <span className="role-avatar" aria-hidden="true">VV</span>
         <span><small>SEU PERSONAGEM</small><strong>{challenge.roles[0].name}</strong></span>
         <p>{challenge.roles[0].description}</p>
         <span className="line-count">{challenge.roles[0].lineCount} falas</span>

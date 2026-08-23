@@ -1,9 +1,9 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
-import type { DailyChallenge } from '../../lib/daily-challenge';
+import type { DubScene } from '../../lib/scenes';
 
-export function ScenePreview({ challenge }: { challenge: DailyChallenge }) {
+export function ScenePreview({ challenge }: { challenge: DubScene }) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [elapsed, setElapsed] = useState(0);
@@ -55,7 +55,7 @@ export function ScenePreview({ challenge }: { challenge: DailyChallenge }) {
         >
           <source src={challenge.videoUrl} type="video/webm" />
         </video>
-        <span className="demo-label">PACK BR · TESTE PRIVADO</span>
+        <span className="demo-label">PACK BR · REFERÊNCIA</span>
         <button
           className="player-button"
           type="button"

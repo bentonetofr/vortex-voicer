@@ -6,11 +6,11 @@ import './globals.css';
 const geist = Geist({ variable: '--font-geist', subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Vortex Voice — Sua voz, uma nova cena',
-  description: 'Entre no desafio diário de dublagem, dê sua voz a uma nova cena e compartilhe sua interpretação.',
+  title: 'Vortex Voice — Escolha uma cena e solte a voz',
+  description: 'Explore um pack completo de cenas e duble direto no navegador, sem login.',
   openGraph: {
     title: 'Vortex Voice — Sua voz, uma nova cena',
-    description: 'Uma cena nova por dia para você interpretar, gravar e compartilhar.',
+    description: 'Um pack completo de cenas para você interpretar e gravar sem login.',
     images: [{ url: '/vortex-voice-logo.png', width: 512, height: 512, alt: 'Símbolo do Vortex Voice' }],
     locale: 'pt_BR',
     type: 'website',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary',
     title: 'Vortex Voice — Sua voz, uma nova cena',
-    description: 'Uma cena nova por dia para você interpretar, gravar e compartilhar.',
+    description: 'Um pack completo de cenas para você interpretar e gravar sem login.',
     images: ['/vortex-voice-logo.png'],
   },
   icons: {

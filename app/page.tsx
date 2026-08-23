@@ -1,119 +1,46 @@
-import { DailyCountdown } from './components/daily-countdown';
 import { SiteHeader } from './components/site-header';
-import { getDailyChallenge } from '../lib/daily-challenge';
-
-export const dynamic = 'force-dynamic';
-
-const soundBars = [28, 44, 65, 38, 76, 52, 88, 61, 34, 70, 49, 81, 42, 58, 31];
+import { SceneLibrary } from './components/scene-library';
+import { dubScenes } from '../lib/scenes';
 
 export default function Home() {
-  const dailyChallenge = getDailyChallenge();
+  const featured = dubScenes.find((scene) => scene.featured) ?? dubScenes[0];
+
   return (
     <main id="main-content">
       <SiteHeader />
 
-      <section className="hero" id="inicio">
-        <div className="hero-copy">
-          <div className="eyebrow"><span className="live-dot" />desafio diário de dublagem</div>
-          <h1>A cena é a mesma.<br /><span>A voz é toda sua.</span></h1>
-          <p className="hero-description">
-            Dê vida a uma cena nova todos os dias, mantenha sua sequência
-            e descubra até onde a sua voz pode chegar.
-          </p>
-
-          <div className="hero-actions">
-            <a className="primary-button" href="/desafio">
-              <span className="mic-symbol" aria-hidden="true" />
-              Dublar cena de hoje
-              <span className="arrow" aria-hidden="true">→</span>
-            </a>
-            <a className="text-button" href="#como-funciona">
-              <span className="play-symbol" aria-hidden="true">▶</span>
-              Ver como funciona
-            </a>
-          </div>
-
-          <div className="community-note" id="comunidade">
-            <div className="avatar-stack" aria-hidden="true">
-              <span>MA</span><span>LU</span><span>JO</span><span>+8</span>
-            </div>
-            <p><strong>{dailyChallenge.participantCount.toLocaleString('pt-BR')} vozes</strong> já entraram no desafio de hoje</p>
+      <section className="library-hero" id="inicio">
+        <div className="library-hero-copy">
+          <p className="library-kicker"><span /> BR DUB PACK · CENAS ABERTAS</p>
+          <h1>Escolha uma cena.<br /><span>Solte a sua voz.</span></h1>
+          <p>Explore o pack completo, encontre a cena que combina com você e comece a dublar sem conta, sequência ou compromisso.</p>
+          <div className="library-hero-actions">
+            <a className="primary-button" href="#cenas">Explorar cenas <span aria-hidden="true">↓</span></a>
+            <span><strong>{dubScenes.length}</strong> cenas para dublar</span>
           </div>
         </div>
 
-        <div className="challenge-wrap" id="hoje">
-          <div className="ambient-orb ambient-orb-one" />
-          <div className="ambient-orb ambient-orb-two" />
-
-          <article className="challenge-card">
-            <div className="challenge-visual has-pack-poster">
-              <img className="home-pack-poster" src={dailyChallenge.posterUrl} alt="" />
-              <div className="scene-glow" />
-              <div className="scene-window" />
-              <div className="scene-silhouette scene-silhouette-left" />
-              <div className="scene-silhouette scene-silhouette-right" />
-              <div className="challenge-topline">
-                <span className="daily-badge"><i /> Cena de hoje</span>
-                <span className="challenge-number">#{dailyChallenge.number}</span>
-              </div>
-              <div className="caption-preview">“{dailyChallenge.quote}”</div>
-            </div>
-
-            <div className="challenge-content">
-              <div className="challenge-title-row">
-                <div><p className="content-label">DESAFIO DO DIA</p><h2>{dailyChallenge.title}</h2></div>
-                <span className="age-rating" aria-label={`Classificação indicativa ${dailyChallenge.ageRating} anos`}>{dailyChallenge.ageRating}</span>
-              </div>
-              <p className="scene-description">{dailyChallenge.synopsis}</p>
-              <div className="scene-meta" aria-label="Detalhes da cena">
-                <span><i className="clock-icon" />{dailyChallenge.durationSeconds} segundos</span>
-                <span><i className="mask-icon" />{dailyChallenge.genre}</span>
-                <span><i className="person-icon" />{dailyChallenge.roles.length} personagem</span>
-              </div>
-              <div className="waveform" aria-hidden="true">
-                {soundBars.map((height, index) => <i key={index} style={{ height: `${height}%` }} />)}
-              </div>
-              <div className="challenge-footer">
-                <DailyCountdown showLabel />
-                <a className="round-play" href="/desafio" aria-label="Abrir desafio de hoje">▶</a>
-              </div>
-            </div>
-          </article>
-
-          <div className="floating-streak">
-            <span className="mini-flame">◆</span>
-            <div><strong>+1 dia</strong><small>Não quebre a sequência</small></div>
-          </div>
-        </div>
+        <a className="featured-scene" href={`/desafio?scene=${featured.slug}`} aria-label={`Dublar ${featured.title}`}>
+          <img src={featured.posterUrl} alt="" />
+          <div className="featured-shade" />
+          <div className="featured-label"><span>EM DESTAQUE</span><small>{featured.durationSeconds}s</small></div>
+          <div className="featured-copy"><p>{featured.sourceTitle}</p><h2>{featured.title}</h2><span className="featured-play">▶</span></div>
+        </a>
       </section>
 
-      <section className="how-it-works" aria-label="Resumo de como funciona">
-        <p>Uma cena por dia</p><span /><p>Grave do seu jeito</p><span /><p>Compartilhe sua versão</p>
+      <section className="scene-library" id="cenas" aria-labelledby="scene-library-title">
+        <div className="library-heading">
+          <div><p className="content-label">BIBLIOTECA DE CENAS</p><h2 id="scene-library-title">Qual vai ser a sua próxima voz?</h2></div>
+          <p>Todos os vídeos ficam disponíveis. Escolha sem pressa e grave quantas versões quiser.</p>
+        </div>
+
+        <SceneLibrary scenes={dubScenes} />
       </section>
 
-      <section className="process-section" id="como-funciona">
-        <div className="section-heading">
-          <p className="content-label">SIMPLES DE ENTRAR EM CENA</p>
-          <h2>Uma pequena estreia, todos os dias.</h2>
-          <p>Você não precisa entender de dublagem. Só precisa de alguns minutos e vontade de experimentar.</p>
-        </div>
-        <div className="process-grid">
-          <article><span>01</span><i className="process-icon listen-icon" /><h3>Conheça a cena</h3><p>Assista à referência, escolha o personagem e entenda o momento.</p></article>
-          <article><span>02</span><i className="process-icon voice-icon" /><h3>Coloque sua voz</h3><p>Siga o texto ou improvise. A interpretação é inteiramente sua.</p></article>
-          <article><span>03</span><i className="process-icon share-icon" /><h3>Mostre sua versão</h3><p>Receba o vídeo pronto e veja como outras pessoas resolveram a mesma cena.</p></article>
-        </div>
-      </section>
-
-      <section className="daily-callout">
-        <div>
-          <p className="content-label">AINDA DÁ TEMPO</p>
-          <h2>Não deixe a cena de hoje passar.</h2>
-          <p>O desafio muda à meia-noite, no horário de Brasília.</p>
-        </div>
-        <div className="callout-action">
-          <DailyCountdown />
-          <a className="primary-button" href="/desafio">Começar o desafio <span className="arrow">→</span></a>
-        </div>
+      <section className="library-how" id="como-funciona">
+        <p className="content-label">SEM LOGIN, SEM PRESSA</p>
+        <h2>Você escolhe. Você grava. Você se diverte.</h2>
+        <div><article><span>01</span><h3>Escolha uma cena</h3><p>Navegue pelo pack inteiro e abra a que mais combina com o seu humor.</p></article><article><span>02</span><h3>Ative o microfone</h3><p>A gravação acontece no navegador e começa somente quando você permitir.</p></article><article><span>03</span><h3>Faça do seu jeito</h3><p>Siga a cena ou improvise. Você pode refazer quantas vezes quiser.</p></article></div>
       </section>
     </main>
   );

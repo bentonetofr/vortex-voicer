@@ -1,8 +1,8 @@
 type SiteHeaderProps = {
-  active?: 'today' | 'community' | 'how';
+  active?: 'library' | 'how';
 };
 
-export function SiteHeader({ active = 'today' }: SiteHeaderProps) {
+export function SiteHeader({ active = 'library' }: SiteHeaderProps) {
   return (
     <header className="site-header">
       <a className="brand" href="/#inicio" aria-label="Vortex Voice — início">
@@ -18,19 +18,17 @@ export function SiteHeader({ active = 'today' }: SiteHeaderProps) {
       </a>
 
       <nav className="main-nav" aria-label="Navegação principal">
-        <a className={active === 'today' ? 'active' : ''} href="/desafio">Hoje</a>
-        <a className={active === 'community' ? 'active' : ''} href="/comunidade">Comunidade</a>
+        <a className={active === 'library' ? 'active' : ''} href="/#cenas">Cenas</a>
         <a className={active === 'how' ? 'active' : ''} href="/#como-funciona">Como funciona</a>
       </nav>
 
-      <a className="streak-button" href="/perfil" aria-label="Abrir meu perfil e sequência diária">
-        <span className="streak-flame" aria-hidden="true">◆</span>
-        <strong>Meu</strong><span>perfil</span>
+      <a className="streak-button" href="/#cenas" aria-label="Explorar todas as cenas">
+        <span className="streak-flame" aria-hidden="true">◎</span>
+        <strong>Explorar</strong><span>pack</span>
       </a>
 
       <nav className="mobile-nav" aria-label="Navegação principal no celular">
-        <a className={active === 'today' ? 'active' : ''} href="/desafio">Hoje</a>
-        <a className={active === 'community' ? 'active' : ''} href="/comunidade">Comunidade</a>
+        <a className={active === 'library' ? 'active' : ''} href="/#cenas">Cenas</a>
         <a className={active === 'how' ? 'active' : ''} href="/#como-funciona">Como funciona</a>
       </nav>
     </header>
