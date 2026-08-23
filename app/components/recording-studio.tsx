@@ -34,6 +34,7 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
   const meterFrameRef = useRef<number | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const audioPlayersRef = useRef<HTMLAudioElement[]>([]);
+  const sceneVideoRef = useRef<HTMLVideoElement | null>(null);
   const takeUrlsRef = useRef<Set<string>>(new Set());
   const reviewStartedAtRef = useRef(0);
   const firedLinesRef = useRef<Set<string>>(new Set());
@@ -52,6 +53,7 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
       if (recordTimerRef.current) window.clearTimeout(recordTimerRef.current);
       if (progressTimerRef.current) window.clearInterval(progressTimerRef.current);
       audioPlayersRef.current.forEach((audio) => audio.pause());
+      sceneVideoRef.current?.pause();
       takeUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
       void audioContextRef.current?.close();
     };
@@ -103,6 +105,7 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
 
   const finishRecording = () => {
     clearRecordingTimers();
+    sceneVideoRef.current?.pause();
     if (recorderRef.current?.state === 'recording') recorderRef.current.stop();
   };
 
@@ -148,6 +151,11 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
 
     recorder.start();
     setIsRecording(true);
+    if (sceneVideoRef.current) {
+      sceneVideoRef.current.currentTime = line.startMs / 1000;
+      sceneVideoRef.current.muted = true;
+      void sceneVideoRef.current.play();
+    }
     const startedAt = performance.now();
     setSceneTimeMs(line.startMs);
     progressTimerRef.current = window.setInterval(() => {
@@ -172,6 +180,7 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
     progressTimerRef.current = null;
     audioPlayersRef.current.forEach((audio) => audio.pause());
     audioPlayersRef.current = [];
+    sceneVideoRef.current?.pause();
     setIsReviewing(false);
   };
 
@@ -189,6 +198,11 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
     setFinished(false);
     setSceneTimeMs(0);
     setIsReviewing(true);
+    if (sceneVideoRef.current) {
+      sceneVideoRef.current.currentTime = 0;
+      sceneVideoRef.current.muted = true;
+      void sceneVideoRef.current.play();
+    }
     firedLinesRef.current = new Set();
     reviewStartedAtRef.current = performance.now();
 
@@ -300,9 +314,7 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
 
         <div className="review-stage">
           <div className={`studio-scene ${isReviewing ? 'is-live' : ''}`}>
-            <div className="scene-glow" /><div className="scene-window" />
-            <div className="scene-silhouette scene-silhouette-left" />
-            <div className="scene-silhouette scene-silhouette-right" />
+            <video ref={sceneVideoRef} className="pack-scene-video" src={challenge.videoUrl} poster={challenge.posterUrl} muted playsInline preload="metadata" />
             <span className="review-badge">SUA DUBLAGEM</span>
             <div className="studio-subtitle">“{reviewLine}”</div>
           </div>
@@ -312,7 +324,7 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
             </button>
             <span>{formatTime(sceneTimeMs)}</span>
             <div className="studio-progress"><i style={{ width: `${(sceneTimeMs / (challenge.durationSeconds * 1000)) * 100}%` }} /></div>
-            <span>00:{challenge.durationSeconds}</span>
+            <span>{formatTime(challenge.durationSeconds * 1000)}</span>
           </div>
         </div>
 
@@ -363,9 +375,7 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
       <div className="recording-grid">
         <div className="recording-stage-card">
           <div className={`studio-scene ${isRecording ? 'is-live' : ''}`}>
-            <div className="scene-glow" /><div className="scene-window" />
-            <div className="scene-silhouette scene-silhouette-left" />
-            <div className="scene-silhouette scene-silhouette-right" />
+            <video ref={sceneVideoRef} className="pack-scene-video" src={challenge.videoUrl} poster={challenge.posterUrl} muted playsInline preload="metadata" />
             <span className={`recording-status ${isRecording ? 'active' : ''}`}><i />{isRecording ? 'GRAVANDO' : 'PRONTO'}</span>
             {countdown > 0 && <span className="take-countdown" aria-live="assertive">{countdown}</span>}
             <div className="studio-subtitle">“{currentLine.text}”</div>
@@ -373,10 +383,10 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
           <div className="line-timeline" aria-label="Posição da fala na cena">
             <span>00:00</span>
             <div>
-              <i className="line-window" style={{ left: `${(currentLine.startMs / 18000) * 100}%`, width: `${((currentLine.endMs - currentLine.startMs) / 18000) * 100}%` }} />
-              <b style={{ left: `${(sceneTimeMs / 18000) * 100}%` }} />
+              <i className="line-window" style={{ left: `${(currentLine.startMs / (challenge.durationSeconds * 1000)) * 100}%`, width: `${((currentLine.endMs - currentLine.startMs) / (challenge.durationSeconds * 1000)) * 100}%` }} />
+              <b style={{ left: `${(sceneTimeMs / (challenge.durationSeconds * 1000)) * 100}%` }} />
             </div>
-            <span>00:18</span>
+            <span>{formatTime(challenge.durationSeconds * 1000)}</span>
           </div>
         </div>
 
@@ -386,7 +396,7 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
             <small>{((currentLine.endMs - currentLine.startMs) / 1000).toFixed(1)}s</small>
           </div>
           <blockquote>{currentLine.text}</blockquote>
-          <p className="direction-note">Intenção: contenha o medo, mas deixe a urgência aparecer.</p>
+          <p className="direction-note">Intenção: {currentLine.direction}</p>
 
           <div className={`record-action ${isRecording ? 'is-recording' : ''}`}>
             <button type="button" onClick={isRecording ? finishRecording : startRecording} disabled={countdown > 0}>
@@ -432,5 +442,6 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
 
 function formatTime(milliseconds: number) {
   const seconds = Math.floor(milliseconds / 1000);
-  return `00:${String(seconds).padStart(2, '0')}`;
+  const minutes = Math.floor(seconds / 60);
+  return `${String(minutes).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
 }

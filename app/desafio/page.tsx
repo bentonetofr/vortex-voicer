@@ -3,24 +3,22 @@ import { ChallengeSetup } from '../components/challenge-setup';
 import { DailyCountdown } from '../components/daily-countdown';
 import { ScenePreview } from '../components/scene-preview';
 import { SiteHeader } from '../components/site-header';
-import { dailyChallenge } from '../../lib/daily-challenge';
+import { getDailyChallenge } from '../../lib/daily-challenge';
 
-export const metadata: Metadata = {
-  title: `${dailyChallenge.title} — Desafio de hoje | Vortex Voice`,
-  description: `${dailyChallenge.synopsis} Escolha seu estilo e prepare sua dublagem no Vortex Voice.`,
-  openGraph: {
-    title: `${dailyChallenge.title} — Desafio de hoje`,
-    description: dailyChallenge.synopsis,
-    images: [{ url: '/vortex-voice-logo.png', width: 512, height: 512, alt: 'Símbolo do Vortex Voice' }],
-  },
-  twitter: {
-    title: `${dailyChallenge.title} — Desafio de hoje`,
-    description: dailyChallenge.synopsis,
-    images: ['/vortex-voice-logo.png'],
-  },
-};
+export const dynamic = 'force-dynamic';
+
+export function generateMetadata(): Metadata {
+  const dailyChallenge = getDailyChallenge();
+  return {
+    title: `${dailyChallenge.title} — Desafio de hoje | Vortex Voice`,
+    description: `${dailyChallenge.synopsis} Escolha seu estilo e prepare sua dublagem no Vortex Voice.`,
+    openGraph: { title: `${dailyChallenge.title} — Desafio de hoje`, description: dailyChallenge.synopsis, images: [] },
+    twitter: { title: `${dailyChallenge.title} — Desafio de hoje`, description: dailyChallenge.synopsis, images: [] },
+  };
+}
 
 export default function ChallengePage() {
+  const dailyChallenge = getDailyChallenge();
   return (
     <main className="challenge-page" id="main-content">
       <SiteHeader />
@@ -54,7 +52,7 @@ export default function ChallengePage() {
               <i />
               <div><strong>≈ 3 min</strong><span>para concluir</span></div>
             </div>
-            <p className="licensed-note"><span aria-hidden="true">✓</span> Conteúdo demonstrativo autorizado para o protótipo</p>
+            <p className="licensed-note pending"><span aria-hidden="true">!</span> Pack enviado para teste privado · direitos pendentes de verificação</p>
           </div>
         </section>
 

@@ -1,7 +1,7 @@
 import { env } from 'cloudflare:workers';
 import { getChatGPTUser } from '../../chatgpt-auth';
 import { ensureSocialSchema, findOrCreateUser, previousDate, todayInSaoPaulo } from '../../../db/social';
-import { dailyChallenge } from '../../../lib/daily-challenge';
+import { getDailyChallenge } from '../../../lib/daily-challenge';
 
 export async function GET() {
   await ensureSocialSchema();
@@ -17,6 +17,7 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const dailyChallenge = getDailyChallenge();
   const user = await getChatGPTUser();
   if (!user) return Response.json({ error: 'authentication_required' }, { status: 401 });
   const contentLength = Number(request.headers.get('content-length') ?? 0);

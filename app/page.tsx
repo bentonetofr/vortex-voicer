@@ -1,10 +1,13 @@
 import { DailyCountdown } from './components/daily-countdown';
 import { SiteHeader } from './components/site-header';
-import { dailyChallenge } from '../lib/daily-challenge';
+import { getDailyChallenge } from '../lib/daily-challenge';
+
+export const dynamic = 'force-dynamic';
 
 const soundBars = [28, 44, 65, 38, 76, 52, 88, 61, 34, 70, 49, 81, 42, 58, 31];
 
 export default function Home() {
+  const dailyChallenge = getDailyChallenge();
   return (
     <main id="main-content">
       <SiteHeader />
@@ -43,7 +46,8 @@ export default function Home() {
           <div className="ambient-orb ambient-orb-two" />
 
           <article className="challenge-card">
-            <div className="challenge-visual">
+            <div className="challenge-visual has-pack-poster">
+              <img className="home-pack-poster" src={dailyChallenge.posterUrl} alt="" />
               <div className="scene-glow" />
               <div className="scene-window" />
               <div className="scene-silhouette scene-silhouette-left" />

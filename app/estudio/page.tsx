@@ -1,15 +1,21 @@
 import type { Metadata } from 'next';
 import { RecordingStudio } from '../components/recording-studio';
 import { SiteHeader } from '../components/site-header';
-import { dailyChallenge } from '../../lib/daily-challenge';
+import { getDailyChallenge } from '../../lib/daily-challenge';
 
-export const metadata: Metadata = {
-  title: `Estúdio — ${dailyChallenge.title} | Vortex Voice`,
-  description: 'Grave suas falas, refaça tomadas e revise a dublagem completa no estúdio Vortex Voice.',
-  robots: { index: false, follow: false },
-};
+export const dynamic = 'force-dynamic';
+
+export function generateMetadata(): Metadata {
+  const dailyChallenge = getDailyChallenge();
+  return {
+    title: `Estúdio — ${dailyChallenge.title} | Vortex Voice`,
+    description: 'Grave suas falas, refaça tomadas e revise a dublagem completa no estúdio Vortex Voice.',
+    robots: { index: false, follow: false },
+  };
+}
 
 export default function StudioPage() {
+  const dailyChallenge = getDailyChallenge();
   return (
     <main className="studio-page" id="main-content">
       <SiteHeader />

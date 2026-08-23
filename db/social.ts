@@ -1,5 +1,6 @@
 import { env } from 'cloudflare:workers';
 import type { ChatGPTUser } from '../app/chatgpt-auth';
+import { dailyChallenges } from '../lib/daily-challenge';
 
 let schemaPromise: Promise<void> | null = null;
 
@@ -84,21 +85,23 @@ async function createSocialSchema() {
     db.prepare('CREATE INDEX IF NOT EXISTS idx_reports_submission_status ON reports(submission_id, status)'),
   ]);
 
-  await db.batch([
-    db.prepare(`INSERT OR IGNORE INTO scenes
-      (id, slug, title, source_title, source_type, synopsis, genre, age_rating, challenge_date, duration_ms, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
-      .bind('challenge-001', 'o-ultimo-sinal', 'O último sinal', 'Cena demonstrativa', 'original',
-        'Uma transmissão misteriosa. Uma última chance de ser ouvido.', 'Drama', '12', todayInSaoPaulo(), 18000, 'published'),
-    db.prepare('INSERT OR IGNORE INTO roles (id, scene_id, name, description, sort_order) VALUES (?, ?, ?, ?, ?)')
-      .bind('lia', 'challenge-001', 'Lia', 'Operadora de rádio tentando manter a calma.', 0),
-    db.prepare('INSERT OR IGNORE INTO script_lines (id, scene_id, role_id, sequence, start_ms, end_ms, text, direction) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
-      .bind('line-1', 'challenge-001', 'lia', 1, 1200, 5200, 'Alô? Tem alguém nessa frequência?', 'Contenha o medo.'),
-    db.prepare('INSERT OR IGNORE INTO script_lines (id, scene_id, role_id, sequence, start_ms, end_ms, text, direction) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
-      .bind('line-2', 'challenge-001', 'lia', 2, 7800, 12100, 'Eu achei que nunca ouviria outra voz.', 'Alívio e desconfiança.'),
-    db.prepare('INSERT OR IGNORE INTO script_lines (id, scene_id, role_id, sequence, start_ms, end_ms, text, direction) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
-      .bind('line-3', 'challenge-001', 'lia', 3, 13700, 17600, 'Espera... você sabe onde eu estou?', 'A urgência toma conta.'),
-  ]);
+  const packStatements = dailyChallenges.flatMap((challenge, challengeIndex) => {
+    const role = challenge.roles[0];
+    const challengeDate = new Date(Date.UTC(2026, 7, 23 + challengeIndex)).toISOString().slice(0, 10);
+    return [
+      db.prepare(`INSERT OR IGNORE INTO scenes
+        (id, slug, title, source_title, source_type, synopsis, genre, age_rating, challenge_date, duration_ms, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+        .bind(challenge.id, challenge.slug, challenge.title, challenge.sourceTitle, 'user-pack',
+          challenge.synopsis, challenge.genre, challenge.ageRating, challengeDate, challenge.durationSeconds * 1000, 'private_test'),
+      db.prepare('INSERT OR IGNORE INTO roles (id, scene_id, name, description, sort_order) VALUES (?, ?, ?, ?, ?)')
+        .bind(role.id, challenge.id, role.name, role.description, 0),
+      ...challenge.script.map((line, lineIndex) => db.prepare(
+        'INSERT OR IGNORE INTO script_lines (id, scene_id, role_id, sequence, start_ms, end_ms, text, direction) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      ).bind(line.id, challenge.id, role.id, lineIndex + 1, line.startMs, line.endMs, line.text, line.direction)),
+    ];
+  });
+  await db.batch(packStatements);
 }
 
 export async function findOrCreateUser(user: ChatGPTUser) {

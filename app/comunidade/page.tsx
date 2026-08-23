@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import { CommunityFeed } from '../components/community-feed';
 import { DailyCountdown } from '../components/daily-countdown';
 import { SiteHeader } from '../components/site-header';
-import { dailyChallenge } from '../../lib/daily-challenge';
+import { getDailyChallenge } from '../../lib/daily-challenge';
+
+export const dynamic = 'force-dynamic';
 
 export const metadata: Metadata = {
   title: 'Comunidade | Vortex Voice',
@@ -10,6 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default function CommunityPage() {
+  const dailyChallenge = getDailyChallenge();
   return (
     <main className="community-page" id="main-content">
       <SiteHeader active="community" />

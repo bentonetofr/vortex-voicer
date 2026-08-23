@@ -166,6 +166,8 @@ h1 span {
 .challenge-visual::after {
   position: absolute; inset: 0; background: linear-gradient(105deg, rgb(255 255 255 / 3%), transparent 35%, rgb(0 0 0 / 26%)); content: '';
 }
+.home-pack-poster, .pack-scene-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.has-pack-poster .scene-glow, .has-pack-poster .scene-window, .has-pack-poster .scene-silhouette { display: none; }
 .scene-window {
   position: absolute; top: 35px; right: 54px; width: 110px; height: 142px; border: 5px solid #393246;
   background: linear-gradient(155deg, rgb(192 179 218 / 42%), rgb(83 70 105 / 22%));
@@ -546,6 +548,11 @@ h1 span {
   background: linear-gradient(105deg, rgb(255 255 255 / 3%), transparent 35%, rgb(0 0 0 / 26%));
   content: '';
 }
+.pack-scene-video { z-index: 0; background: #09070d; }
+.video-fallback {
+  position: absolute; z-index: 5; right: 20px; top: 18px; max-width: 260px; margin: 0; padding: 9px 11px;
+  border-radius: 8px; background: rgb(107 49 62 / 90%); color: #ffe2e7; font-size: 9px; line-height: 1.45;
+}
 
 .player-scene .scene-window { top: 56px; right: 82px; width: 155px; height: 205px; }
 .player-scene .scene-glow { top: 54px; right: 60px; width: 260px; height: 220px; }
@@ -613,7 +620,7 @@ h1 span {
 }
 
 .player-controls button {
-  border: 0;
+  min-width: 40px; min-height: 40px; border: 0;
   background: transparent;
   color: #bcb4c5;
   cursor: pointer;
@@ -655,6 +662,8 @@ h1 span {
 .today-stats > i { width: 1px; background: rgb(255 255 255 / 7%); }
 .licensed-note { display: flex; align-items: center; gap: 8px; margin: 17px 0 0; color: #6f8e7e; font-size: 9px; }
 .licensed-note span { width: 17px; height: 17px; display: grid; place-items: center; border-radius: 50%; background: rgb(120 221 176 / 9%); }
+.licensed-note.pending { color: #b9a576; }
+.licensed-note.pending span { background: rgb(216 184 69 / 10%); color: #d8b845; }
 
 .challenge-setup,
 .setup-confirmation {
