@@ -49,19 +49,19 @@ export function ModeLauncher({ playerName }: { playerName: string }) {
   return (
     <section className="mode-hub" id="modos" aria-labelledby="modes-title">
       <div className="mode-hub-heading">
-        <div><p className="game-kicker"><span /> ONLINE · ATÉ 8 JOGADORES</p><h1 id="modes-title">Escolha seu<br /><span>modo de jogo.</span></h1></div>
-        <p>Olá, <strong>{playerName}</strong>. Monte uma sala, convide seus amigos e descubra quem domina cada cena — no talento ou no improviso.</p>
+        <div><p className="game-kicker"><span /> ATÉ 8 JOGADORES</p><h1 id="modes-title">Modos<br /><span>de jogo.</span></h1></div>
+        <p>Olá, <strong>{playerName}</strong>. Crie uma sala ou entre com um código.</p>
       </div>
 
       <div className="game-mode-grid">
         <article className={`game-mode-card classic ${classicOpen ? 'selected' : ''}`}>
           <div className="mode-art"><span className="mode-orbit orbit-one" /><span className="mode-orbit orbit-two" /><strong>5</strong><small>CENAS</small></div>
-          <div className="mode-copy"><p>PRIMEIRO MODO</p><h2>Clássico</h2><p>Cinco cenas aleatórias. Todo mundo dubla. No fim de cada rodada, a sala assiste às versões em sequência.</p><div><span>2–8 jogadores</span><span>≈ 15 min</span></div></div>
-          <button className="mode-select-button" type="button" onClick={() => setClassicOpen(true)}>Selecionar modo <span>→</span></button>
+          <div className="mode-copy"><p>DISPONÍVEL</p><h2>Clássico</h2><p>Cinco cenas aleatórias. Todos dublam e assistem às versões no fim de cada rodada.</p><div><span>2–8 jogadores</span><span>≈ 15 min</span></div></div>
+          <button className="mode-select-button" type="button" onClick={() => setClassicOpen(true)}>Selecionar <span>→</span></button>
         </article>
 
         <article className="game-mode-card coming-soon" aria-disabled="true">
-          <div><span>EM BREVE</span><h3>Novos modos estão entrando no vortex.</h3><p>Equipes, batalha de improviso e votação da sala ficam para as próximas versões.</p></div>
+          <div><span>EM BREVE</span><h3>Outros modos</h3><p>Ainda não disponíveis.</p></div>
         </article>
       </div>
 

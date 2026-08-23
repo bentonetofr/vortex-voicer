@@ -11,8 +11,8 @@ export default async function Home() {
       <SiteHeader userName={user?.displayName} />
       {user ? <ModeLauncher playerName={user.displayName} /> : <SignInLanding />}
       <section className="game-rules" id="como-jogar">
-        <div><p className="content-label">UMA PARTIDA, CINCO ESTREIAS</p><h2>Todo mundo recebe a mesma cena.</h2></div>
-        <div className="rule-flow"><article><span>01</span><h3>Reúna a sala</h3><p>Crie um convite e chame até sete amigos.</p></article><i>→</i><article><span>02</span><h3>Dublem juntos</h3><p>A mesma cena aparece para todos gravarem.</p></article><i>→</i><article><span>03</span><h3>Assistam às versões</h3><p>Cada dublagem entra em cena, uma depois da outra.</p></article></div>
+        <div><p className="content-label">COMO JOGAR</p><h2>Uma partida tem cinco cenas.</h2></div>
+        <div className="rule-flow"><article><span>01</span><h3>Crie uma sala</h3><p>Convide até sete amigos.</p></article><i>→</i><article><span>02</span><h3>Grave a cena</h3><p>Todos recebem o mesmo vídeo.</p></article><i>→</i><article><span>03</span><h3>Assista</h3><p>As dublagens são exibidas em sequência.</p></article></div>
       </section>
     </main>
   );
@@ -21,7 +21,7 @@ export default async function Home() {
 function SignInLanding() {
   return (
     <section className="signin-game-hero">
-      <div><p className="game-kicker"><span /> DUBLAGEM MULTIPLAYER</p><h1>A cena é a mesma.<br /><span>As vozes, nem tanto.</span></h1><p>Entre, monte sua sala e transforme cinco cenas aleatórias em uma sessão de dublagem com seus amigos.</p><a className="primary-button" href={chatGPTSignInPath('/')}>Entrar para jogar <span>→</span></a></div>
+      <div><p className="game-kicker"><span /> VORTEX VOICE</p><h1>Dublagem<br /><span>multiplayer.</span></h1><p>Entre, crie uma sala e duble cinco cenas com seus amigos.</p><a className="primary-button" href={chatGPTSignInPath('/')}>Entrar <span>→</span></a></div>
       <div className="party-preview" aria-hidden="true"><span className="preview-badge">SALA COM 6 JOGADORES</span><div className="preview-screen"><i>▶</i><strong>RODADA 3/5</strong></div><div className="preview-players">{['BN','MA','LU','JV','CA','+1'].map((name) => <span key={name}>{name}</span>)}</div></div>
     </section>
   );

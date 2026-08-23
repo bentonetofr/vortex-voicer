@@ -226,7 +226,7 @@ export function RecordingStudio({ challenge }: { challenge: DubScene }) {
 
   const reviewLine = useMemo(() => {
     return challenge.script.find((line) => sceneTimeMs >= line.startMs && sceneTimeMs <= line.endMs)?.text
-      ?? 'Sua versão está entrando em cena.';
+      ?? 'Reproduzindo sua dublagem.';
   }, [challenge.script, sceneTimeMs]);
 
   const downloadTakes = () => {
@@ -253,7 +253,7 @@ export function RecordingStudio({ challenge }: { challenge: DubScene }) {
           </div>
         </div>
         <p className="content-label">TESTE DE SOM</p>
-        <h1 id="mic-title">Vamos ouvir sua voz.</h1>
+        <h1 id="mic-title">Teste do microfone</h1>
         <p className="mic-description">
           Permita o acesso ao microfone e faça um teste. Sua gravação continuará somente neste dispositivo.
         </p>
@@ -291,7 +291,7 @@ export function RecordingStudio({ challenge }: { challenge: DubScene }) {
     return (
       <section className="studio-review" aria-labelledby="review-title">
         <div className="studio-heading-row">
-          <div><p className="content-label">REVISÃO FINAL</p><h1 id="review-title">Sua voz encontrou a cena.</h1></div>
+          <div><p className="content-label">REVISÃO FINAL</p><h1 id="review-title">Revisar dublagem</h1></div>
           <span className="studio-mode">{modeTitle}</span>
         </div>
 
@@ -344,7 +344,7 @@ export function RecordingStudio({ challenge }: { challenge: DubScene }) {
       <div className="studio-heading-row">
         <div>
           <p className="content-label">ESTÚDIO DE DUBLAGEM</p>
-          <h1 id="recording-title">Dê voz à cena inteira.</h1>
+          <h1 id="recording-title">Gravar cena</h1>
         </div>
         <div className="studio-session-meta"><span>{modeTitle}</span><strong>{recordedCount}/{challenge.script.length} falas</strong></div>
       </div>

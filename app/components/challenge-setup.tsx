@@ -17,7 +17,7 @@ export function ChallengeSetup({ challenge }: ChallengeSetupProps) {
       <section className="setup-confirmation" aria-live="polite">
         <span className="confirmation-mark" aria-hidden="true">✓</span>
         <p className="content-label">ESCOLHA CONFIRMADA</p>
-        <h2>Seu palco está preparado.</h2>
+        <h2>Configuração concluída.</h2>
         <p>
           Você vai interpretar <strong>{challenge.roles[0].name}</strong> no modo{' '}
           <strong>{chosenMode.title}</strong>. Faça um teste rápido do microfone e grave cada fala no seu tempo.
@@ -39,7 +39,7 @@ export function ChallengeSetup({ challenge }: ChallengeSetupProps) {
       <div className="setup-heading">
         <div>
           <p className="content-label">PREPARE SUA VERSÃO</p>
-          <h2 id="setup-title">Como você quer entrar em cena?</h2>
+          <h2 id="setup-title">Escolha o modo</h2>
         </div>
         <span className="setup-step">1 de 2</span>
       </div>

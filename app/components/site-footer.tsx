@@ -6,7 +6,7 @@ export function SiteFooter() {
           <img src="/vortex-voice-logo.png" alt="" width={512} height={512} />
           <span>VORTEX <strong>VOICE</strong></span>
         </a>
-        <p>Dublagem multiplayer para quem leva a voz a sério — ou não.</p>
+        <p>Dublagem multiplayer.</p>
       </div>
       <nav aria-label="Informações legais">
         <a href="/termos">Termos de uso</a>

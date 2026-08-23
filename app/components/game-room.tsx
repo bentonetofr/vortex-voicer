@@ -90,10 +90,10 @@ function Lobby({ state, working, onStart }: { state: GameRoomState; working: str
   const empty = state.room.maxPlayers - state.players.length;
   return (
     <div className="lobby-grid">
-      <div className="lobby-copy"><p className="game-kicker"><span /> SALA ABERTA</p><h1>Junte as vozes.<br /><span>O caos vem depois.</span></h1><p>Envie o convite. Quando estiverem prontos, o anfitrião inicia cinco cenas aleatórias para todos.</p><div className="room-code-card"><small>CÓDIGO DA SALA</small><strong>{state.room.code}</strong></div></div>
+      <div className="lobby-copy"><p className="game-kicker"><span /> SALA ABERTA</p><h1>Sala<br /><span>{state.room.code}</span></h1><p>Compartilhe o convite. O anfitrião inicia a partida quando todos estiverem prontos.</p><div className="room-code-card"><small>CÓDIGO DA SALA</small><strong>{state.room.code}</strong></div></div>
       <div className="players-panel"><div><span>JOGADORES</span><strong>{state.players.length}/{state.room.maxPlayers}</strong></div><div className="player-list">
         {state.players.map((player) => <article key={player.id}><span>{initials(player.displayName)}</span><div><strong>{player.displayName}</strong><small>{player.id === state.me.id ? 'Você' : player.seat === 1 ? 'Anfitrião' : `Jogador ${player.seat}`}</small></div><i>PRONTO</i></article>)}
-        {Array.from({ length: Math.min(empty, 3) }, (_, index) => <article className="empty-player" key={index}><span>+</span><div><strong>Aguardando voz…</strong><small>Compartilhe o link</small></div></article>)}
+        {Array.from({ length: Math.min(empty, 3) }, (_, index) => <article className="empty-player" key={index}><span>+</span><div><strong>Aguardando jogador…</strong><small>Compartilhe o link</small></div></article>)}
       </div>{state.me.isHost ? <button className="primary-button lobby-start" type="button" onClick={onStart} disabled={Boolean(working)}>{working ? 'Preparando cenas…' : 'Começar partida →'}</button> : <p className="host-wait">Aguardando o anfitrião começar…</p>}</div>
     </div>
   );
@@ -171,7 +171,7 @@ function RecordingRound({ code, state, onRefresh }: { code: string; state: GameR
     <div className="round-stage">
       <div className="round-heading"><div><p className="content-label">RODADA {state.round!.number} DE {state.room.totalRounds}</p><h1>{state.round!.scene.title}</h1><p>{state.round!.scene.sourceTitle} · {state.round!.scene.genre} · {formatTime(state.round!.scene.durationSeconds)}</p></div><SubmissionStatus state={state} /></div>
       <div className="recording-room-grid"><div className="multiplayer-video"><video ref={videoRef} src={state.round!.scene.videoUrl} poster={state.round!.scene.posterUrl} playsInline preload="metadata" onEnded={stopRecording} /><span className="muted-badge">VÍDEO SEM ÁUDIO</span></div>
-      <aside className="dub-console"><p className="content-label">SUA VEZ DE DUBLAR</p>{submitted ? <div className="submitted-card"><span>✓</span><h2>Dublagem enviada</h2><p>Quando todos terminarem, as versões começam automaticamente.</p></div> : <><h2>{recording ? 'Gravando sua voz…' : audio ? 'Gostou da versão?' : 'Pronto para entrar em cena?'}</h2><p>{recording ? 'A gravação termina junto com o vídeo, mas você pode parar antes.' : 'Use fones de ouvido. O vídeo roda mudo enquanto o microfone captura sua interpretação.'}</p>{recording ? <button className="stop-record-button" type="button" onClick={stopRecording}><i /> Parar gravação</button> : !audio ? <button className="record-room-button" type="button" onClick={startRecording}><i /> Gravar dublagem</button> : <div className="take-review"><audio src={audioUrl} controls /><button type="button" onClick={() => setAudio(null)}>Gravar de novo</button><button className="primary-button" type="button" onClick={submit} disabled={sending}>{sending ? 'Enviando…' : 'Enviar para a sala →'}</button></div>}{message && <p className="room-error" role="alert">{message}</p>}</>}</aside></div>
+      <aside className="dub-console"><p className="content-label">DUBLAGEM</p>{submitted ? <div className="submitted-card"><span>✓</span><h2>Dublagem enviada</h2><p>Aguarde os outros jogadores.</p></div> : <><h2>{recording ? 'Gravando…' : audio ? 'Revisar gravação' : 'Grave sua dublagem'}</h2><p>{recording ? 'A gravação termina com o vídeo ou quando você parar.' : 'Use fones de ouvido. O vídeo será reproduzido sem áudio.'}</p>{recording ? <button className="stop-record-button" type="button" onClick={stopRecording}><i /> Parar gravação</button> : !audio ? <button className="record-room-button" type="button" onClick={startRecording}><i /> Gravar dublagem</button> : <div className="take-review"><audio src={audioUrl} controls /><button type="button" onClick={() => setAudio(null)}>Gravar de novo</button><button className="primary-button" type="button" onClick={submit} disabled={sending}>{sending ? 'Enviando…' : 'Enviar para a sala →'}</button></div>}{message && <p className="room-error" role="alert">{message}</p>}</>}</aside></div>
     </div>
   );
 }
@@ -200,7 +200,7 @@ function PlaybackRound({ state, working, onAdvance }: { state: GameRoomState; wo
   useEffect(() => { if (index > 0 && !done) void playCurrent(); }, [index]); // sequência disparada pelo fim do vídeo anterior
 
   return (
-    <div className="playback-stage"><div className="playback-heading"><p className="game-kicker"><span /> SESSÃO DA RODADA {state.round!.number}</p><h1>Agora, cada voz<br /><span>ganha a tela.</span></h1><p>As versões aparecem na ordem em que os jogadores entraram na sala.</p></div>
+    <div className="playback-stage"><div className="playback-heading"><p className="game-kicker"><span /> RODADA {state.round!.number}</p><h1>Dublagens<br /><span>da rodada.</span></h1><p>As versões serão exibidas na ordem dos jogadores.</p></div>
       <div className="playback-card"><div className="playback-now"><span>{done ? 'SESSÃO CONCLUÍDA' : running ? 'AGORA NA TELA' : 'PRONTOS PARA ASSISTIR'}</span><strong>{done ? `${state.submissions.length} versões assistidas` : current?.displayName}</strong><small>{done ? 'O anfitrião pode avançar.' : `Versão ${index + 1} de ${state.submissions.length}`}</small></div>
         <video key={`video-${index}`} ref={videoRef} src={state.round!.scene.videoUrl} poster={state.round!.scene.posterUrl} playsInline onEnded={nextVersion} />
         {current && <audio key={`audio-${current.id}`} ref={audioRef} src={current.audioUrl} />}
@@ -218,7 +218,7 @@ function SubmissionStatus({ state }: { state: GameRoomState }) {
 }
 
 function FinishedRoom({ state }: { state: GameRoomState }) {
-  return <div className="finished-room"><span>✦</span><p className="content-label">PARTIDA CONCLUÍDA</p><h1>Cinco cenas.<br /><strong>{state.players.length} vozes inesquecíveis.</strong></h1><p>A sala terminou o modo Clássico. Volte ao início para criar outra combinação aleatória.</p><a className="primary-button" href="/">Jogar novamente →</a></div>;
+  return <div className="finished-room"><span>✓</span><p className="content-label">PARTIDA CONCLUÍDA</p><h1>Fim da<br /><strong>partida.</strong></h1><p>{state.players.length} jogadores completaram cinco cenas.</p><a className="primary-button" href="/">Jogar novamente →</a></div>;
 }
 
 function RoomLoading({ error }: { error?: string }) {

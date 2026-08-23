@@ -7,10 +7,10 @@ const geist = Geist({ variable: '--font-geist', subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Vortex Voice — Dublagem multiplayer',
-  description: 'Crie uma sala, convide seus amigos e disputem cinco rodadas de dublagem.',
+  description: 'Plataforma multiplayer de dublagem.',
   openGraph: {
     title: 'Vortex Voice — Dublagem multiplayer',
-    description: 'A mesma cena para todo mundo. Oito vozes e cinco rodadas para jogar com os amigos.',
+    description: 'Plataforma multiplayer de dublagem.',
     images: [{ url: '/vortex-voice-logo.png', width: 512, height: 512, alt: 'Símbolo do Vortex Voice' }],
     locale: 'pt_BR',
     type: 'website',
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary',
     title: 'Vortex Voice — Dublagem multiplayer',
-    description: 'A mesma cena para todo mundo. Oito vozes e cinco rodadas para jogar com os amigos.',
+    description: 'Plataforma multiplayer de dublagem.',
     images: ['/vortex-voice-logo.png'],
   },
   icons: {
