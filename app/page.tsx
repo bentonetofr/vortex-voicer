@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 const soundBars = [28, 44, 65, 38, 76, 52, 88, 61, 34, 70, 49, 81, 42, 58, 31];
 
 export default function Home() {
@@ -5,7 +7,14 @@ export default function Home() {
     <main>
       <header className="site-header">
         <a className="brand" href="#inicio" aria-label="Vortex Voice — início">
-          <span className="brand-mark" aria-hidden="true"><span /><span /><span /></span>
+          <Image
+            className="brand-logo"
+            src="/vortex-voice-logo.png"
+            alt=""
+            width={512}
+            height={512}
+            priority
+          />
           <span className="brand-name">VORTEX <strong>VOICE</strong></span>
           <span className="beta-tag">beta</span>
         </a>

@@ -7,6 +7,10 @@ const geist = Geist({ variable: '--font-geist', subsets: ['latin'] });
 export const metadata: Metadata = {
   title: 'Vortex Voice — Sua voz, uma nova cena',
   description: 'Entre no desafio diário de dublagem, dê sua voz a uma nova cena e compartilhe sua interpretação.',
+  icons: {
+    icon: '/vortex-voice-logo.png',
+    apple: '/vortex-voice-logo.png',
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
