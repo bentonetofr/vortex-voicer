@@ -9,11 +9,11 @@ export async function GET(_request: Request, context: Context) {
   if (!user) return Response.json({ message: 'Entre para ouvir.' }, { status: 401 });
   const { code, submissionId } = await context.params;
   try {
-    const { blob, contentType, size } = await getSubmissionAudio(code.toUpperCase(), submissionId, user);
-    return new Response(blob.stream(), {
+    const { object, contentType } = await getSubmissionAudio(code.toUpperCase(), submissionId, user);
+    return new Response(object.body, {
       headers: {
         'Content-Type': contentType,
-        'Content-Length': String(size),
+        'Content-Length': String(object.size),
         'Cache-Control': 'private, max-age=3600',
       },
     });

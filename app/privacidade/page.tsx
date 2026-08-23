@@ -16,8 +16,8 @@ export default function PrivacyPage() {
         <p className="legal-lead">A voz é um dado pessoal. Por isso, o Vortex Voice procura deixar claro quando ela fica no aparelho e quando é enviada.</p>
 
         <section><h2>Login e identidade</h2><p>O jogo usa o login da plataforma para reconhecer você dentro das salas. Mantemos o identificador da conta, nome de exibição e e-mail necessários para criar partidas e associar cada voz ao jogador correto.</p></section>
-        <section><h2>Microfone e gravações</h2><p>O microfone só é ativado após sua permissão. Você ouve uma prévia local antes de enviar; quando confirma, o áudio é armazenado em um bucket privado no Supabase para que os participantes da mesma sala possam assistir à sequência de dublagens.</p></section>
-        <section><h2>Salas e retenção</h2><p>O Supabase guarda códigos de sala, participantes, cenas sorteadas e metadados dos áudios para operar as partidas deste protótipo. Não trate o serviço como arquivo permanente e não envie uma gravação que seja sua única cópia.</p></section>
+        <section><h2>Microfone e gravações</h2><p>O microfone só é ativado após sua permissão. Você ouve uma prévia local antes de enviar; quando confirma, o áudio é armazenado no serviço para que os participantes da mesma sala possam assistir à sequência de dublagens.</p></section>
+        <section><h2>Salas e retenção</h2><p>Guardamos códigos de sala, participantes, cenas sorteadas e áudios enviados para operar as partidas deste protótipo. Não trate o serviço como arquivo permanente e não envie uma gravação que seja sua única cópia.</p></section>
         <section><h2>Compartilhamento</h2><p>Os áudios de uma rodada ficam disponíveis aos participantes que entraram naquela sala. Evite dados sensíveis e não grave outras pessoas sem consentimento.</p></section>
       </article>
     </main>

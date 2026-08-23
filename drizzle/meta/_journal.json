@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1787502984235,
+      "tag": "0000_stormy_norrin_radd",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1787504244774,
+      "tag": "0001_bizarre_rhodey",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1787512387004,
+      "tag": "0002_lush_sharon_carter",
+      "breakpoints": true
+    }
+  ]
+}
