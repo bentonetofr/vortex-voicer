@@ -20,11 +20,16 @@ export function ChallengeSetup({ challenge }: ChallengeSetupProps) {
         <h2>Seu palco está preparado.</h2>
         <p>
           Você vai interpretar <strong>{challenge.roles[0].name}</strong> no modo{' '}
-          <strong>{chosenMode.title}</strong>. Na próxima etapa, este botão abrirá o estúdio de gravação.
+          <strong>{chosenMode.title}</strong>. Faça um teste rápido do microfone e grave cada fala no seu tempo.
         </p>
-        <button className="secondary-button" type="button" onClick={() => setConfirmed(false)}>
-          Alterar escolha
-        </button>
+        <div className="confirmation-actions">
+          <a className="confirm-button" href={`/estudio?mode=${mode}`}>
+            Entrar no estúdio <span aria-hidden="true">→</span>
+          </a>
+          <button className="secondary-button" type="button" onClick={() => setConfirmed(false)}>
+            Alterar escolha
+          </button>
+        </div>
       </section>
     );
   }
