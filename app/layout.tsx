@@ -6,19 +6,19 @@ import './globals.css';
 const geist = Geist({ variable: '--font-geist', subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Vortex Voice — Escolha uma cena e solte a voz',
-  description: 'Explore um pack completo de cenas e duble direto no navegador, sem login.',
+  title: 'Vortex Voice — Dublagem multiplayer',
+  description: 'Crie uma sala, convide seus amigos e disputem cinco rodadas de dublagem.',
   openGraph: {
-    title: 'Vortex Voice — Sua voz, uma nova cena',
-    description: 'Um pack completo de cenas para você interpretar e gravar sem login.',
+    title: 'Vortex Voice — Dublagem multiplayer',
+    description: 'A mesma cena para todo mundo. Oito vozes e cinco rodadas para jogar com os amigos.',
     images: [{ url: '/vortex-voice-logo.png', width: 512, height: 512, alt: 'Símbolo do Vortex Voice' }],
     locale: 'pt_BR',
     type: 'website',
   },
   twitter: {
     card: 'summary',
-    title: 'Vortex Voice — Sua voz, uma nova cena',
-    description: 'Um pack completo de cenas para você interpretar e gravar sem login.',
+    title: 'Vortex Voice — Dublagem multiplayer',
+    description: 'A mesma cena para todo mundo. Oito vozes e cinco rodadas para jogar com os amigos.',
     images: ['/vortex-voice-logo.png'],
   },
   icons: {

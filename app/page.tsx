@@ -1,47 +1,28 @@
+import { chatGPTSignInPath, getChatGPTUser } from './chatgpt-auth';
+import { ModeLauncher } from './components/mode-launcher';
 import { SiteHeader } from './components/site-header';
-import { SceneLibrary } from './components/scene-library';
-import { dubScenes } from '../lib/scenes';
 
-export default function Home() {
-  const featured = dubScenes.find((scene) => scene.featured) ?? dubScenes[0];
+export const dynamic = 'force-dynamic';
 
+export default async function Home() {
+  const user = await getChatGPTUser();
   return (
-    <main id="main-content">
-      <SiteHeader />
-
-      <section className="library-hero" id="inicio">
-        <div className="library-hero-copy">
-          <p className="library-kicker"><span /> BR DUB PACK · CENAS ABERTAS</p>
-          <h1>Escolha uma cena.<br /><span>Solte a sua voz.</span></h1>
-          <p>Explore o pack completo, encontre a cena que combina com você e comece a dublar sem conta, sequência ou compromisso.</p>
-          <div className="library-hero-actions">
-            <a className="primary-button" href="#cenas">Explorar cenas <span aria-hidden="true">↓</span></a>
-            <span><strong>{dubScenes.length}</strong> cenas para dublar</span>
-          </div>
-        </div>
-
-        <a className="featured-scene" href={`/desafio?scene=${featured.slug}`} aria-label={`Dublar ${featured.title}`}>
-          <img src={featured.posterUrl} alt="" />
-          <div className="featured-shade" />
-          <div className="featured-label"><span>EM DESTAQUE</span><small>{featured.durationSeconds}s</small></div>
-          <div className="featured-copy"><p>{featured.sourceTitle}</p><h2>{featured.title}</h2><span className="featured-play">▶</span></div>
-        </a>
-      </section>
-
-      <section className="scene-library" id="cenas" aria-labelledby="scene-library-title">
-        <div className="library-heading">
-          <div><p className="content-label">BIBLIOTECA DE CENAS</p><h2 id="scene-library-title">Qual vai ser a sua próxima voz?</h2></div>
-          <p>Todos os vídeos ficam disponíveis. Escolha sem pressa e grave quantas versões quiser.</p>
-        </div>
-
-        <SceneLibrary scenes={dubScenes} />
-      </section>
-
-      <section className="library-how" id="como-funciona">
-        <p className="content-label">SEM LOGIN, SEM PRESSA</p>
-        <h2>Você escolhe. Você grava. Você se diverte.</h2>
-        <div><article><span>01</span><h3>Escolha uma cena</h3><p>Navegue pelo pack inteiro e abra a que mais combina com o seu humor.</p></article><article><span>02</span><h3>Ative o microfone</h3><p>A gravação acontece no navegador e começa somente quando você permitir.</p></article><article><span>03</span><h3>Faça do seu jeito</h3><p>Siga a cena ou improvise. Você pode refazer quantas vezes quiser.</p></article></div>
+    <main id="main-content" className="game-home">
+      <SiteHeader userName={user?.displayName} />
+      {user ? <ModeLauncher playerName={user.displayName} /> : <SignInLanding />}
+      <section className="game-rules" id="como-jogar">
+        <div><p className="content-label">UMA PARTIDA, CINCO ESTREIAS</p><h2>Todo mundo recebe a mesma cena.</h2></div>
+        <div className="rule-flow"><article><span>01</span><h3>Reúna a sala</h3><p>Crie um convite e chame até sete amigos.</p></article><i>→</i><article><span>02</span><h3>Dublem juntos</h3><p>A mesma cena aparece para todos gravarem.</p></article><i>→</i><article><span>03</span><h3>Assistam às versões</h3><p>Cada dublagem entra em cena, uma depois da outra.</p></article></div>
       </section>
     </main>
+  );
+}
+
+function SignInLanding() {
+  return (
+    <section className="signin-game-hero">
+      <div><p className="game-kicker"><span /> DUBLAGEM MULTIPLAYER</p><h1>A cena é a mesma.<br /><span>As vozes, nem tanto.</span></h1><p>Entre, monte sua sala e transforme cinco cenas aleatórias em uma sessão de dublagem com seus amigos.</p><a className="primary-button" href={chatGPTSignInPath('/')}>Entrar para jogar <span>→</span></a></div>
+      <div className="party-preview" aria-hidden="true"><span className="preview-badge">SALA COM 6 JOGADORES</span><div className="preview-screen"><i>▶</i><strong>RODADA 3/5</strong></div><div className="preview-players">{['BN','MA','LU','JV','CA','+1'].map((name) => <span key={name}>{name}</span>)}</div></div>
+    </section>
   );
 }

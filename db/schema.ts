@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { index, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
+import { index, integer, primaryKey, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 
 export const scenes = sqliteTable(
   'scenes',
@@ -159,4 +159,60 @@ export const reports = sqliteTable(
     createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
   },
   (table) => [index('idx_reports_submission_status').on(table.submissionId, table.status)],
+);
+
+export const gameRooms = sqliteTable(
+  'game_rooms',
+  {
+    id: text('id').primaryKey(),
+    code: text('code').notNull(),
+    hostUserId: text('host_user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+    mode: text('mode').notNull().default('classic'),
+    status: text('status').notNull().default('lobby'),
+    currentRound: integer('current_round').notNull().default(0),
+    totalRounds: integer('total_rounds').notNull().default(5),
+    maxPlayers: integer('max_players').notNull().default(8),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+    updatedAt: integer('updated_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (table) => [uniqueIndex('idx_game_rooms_code').on(table.code), index('idx_game_rooms_status').on(table.status)],
+);
+
+export const roomPlayers = sqliteTable(
+  'room_players',
+  {
+    roomId: text('room_id').notNull().references(() => gameRooms.id, { onDelete: 'cascade' }),
+    userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+    seat: integer('seat').notNull(),
+    joinedAt: integer('joined_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (table) => [primaryKey({ columns: [table.roomId, table.userId] }), uniqueIndex('idx_room_players_seat').on(table.roomId, table.seat), index('idx_room_players_user').on(table.userId)],
+);
+
+export const gameRounds = sqliteTable(
+  'game_rounds',
+  {
+    id: text('id').primaryKey(),
+    roomId: text('room_id').notNull().references(() => gameRooms.id, { onDelete: 'cascade' }),
+    roundNumber: integer('round_number').notNull(),
+    sceneSlug: text('scene_slug').notNull(),
+    status: text('status').notNull().default('queued'),
+    createdAt: integer('created_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (table) => [uniqueIndex('idx_game_rounds_room_number').on(table.roomId, table.roundNumber), index('idx_game_rounds_room_status').on(table.roomId, table.status)],
+);
+
+export const roundSubmissions = sqliteTable(
+  'round_submissions',
+  {
+    id: text('id').primaryKey(),
+    roundId: text('round_id').notNull().references(() => gameRounds.id, { onDelete: 'cascade' }),
+    userId: text('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+    audioObjectKey: text('audio_object_key').notNull(),
+    contentType: text('content_type').notNull(),
+    sizeBytes: integer('size_bytes').notNull(),
+    durationMs: integer('duration_ms').notNull(),
+    submittedAt: integer('submitted_at', { mode: 'timestamp' }).notNull().default(sql`(unixepoch())`),
+  },
+  (table) => [uniqueIndex('idx_round_submissions_round_user').on(table.roundId, table.userId), uniqueIndex('idx_round_submissions_object').on(table.audioObjectKey), index('idx_round_submissions_round_time').on(table.roundId, table.submittedAt)],
 );

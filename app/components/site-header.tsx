@@ -1,8 +1,9 @@
 type SiteHeaderProps = {
-  active?: 'library' | 'how';
+  active?: 'modes' | 'how';
+  userName?: string;
 };
 
-export function SiteHeader({ active = 'library' }: SiteHeaderProps) {
+export function SiteHeader({ active = 'modes', userName }: SiteHeaderProps) {
   return (
     <header className="site-header">
       <a className="brand" href="/#inicio" aria-label="Vortex Voice — início">
@@ -18,19 +19,20 @@ export function SiteHeader({ active = 'library' }: SiteHeaderProps) {
       </a>
 
       <nav className="main-nav" aria-label="Navegação principal">
-        <a className={active === 'library' ? 'active' : ''} href="/#cenas">Cenas</a>
-        <a className={active === 'how' ? 'active' : ''} href="/#como-funciona">Como funciona</a>
+        <a className={active === 'modes' ? 'active' : ''} href="/#modos">Modos</a>
+        <a className={active === 'how' ? 'active' : ''} href="/#como-jogar">Como jogar</a>
       </nav>
 
-      <a className="streak-button" href="/#cenas" aria-label="Explorar todas as cenas">
-        <span className="streak-flame" aria-hidden="true">◎</span>
-        <strong>Explorar</strong><span>pack</span>
-      </a>
+      {userName ? <a className="player-chip" href="/signout-with-chatgpt?return_to=%2F"><span>{initials(userName)}</span><strong>{userName}</strong><small>Sair</small></a> : <a className="header-login" href="/signin-with-chatgpt?return_to=%2F">Entrar</a>}
 
       <nav className="mobile-nav" aria-label="Navegação principal no celular">
-        <a className={active === 'library' ? 'active' : ''} href="/#cenas">Cenas</a>
-        <a className={active === 'how' ? 'active' : ''} href="/#como-funciona">Como funciona</a>
+        <a className={active === 'modes' ? 'active' : ''} href="/#modos">Modos</a>
+        <a className={active === 'how' ? 'active' : ''} href="/#como-jogar">Como jogar</a>
       </nav>
     </header>
   );
+}
+
+function initials(name: string) {
+  return name.split(/\s+/).slice(0, 2).map((part) => part[0]?.toUpperCase()).join('') || 'VV';
 }
