@@ -19,14 +19,14 @@ export function SiteHeader({ active = 'today' }: SiteHeaderProps) {
 
       <nav className="main-nav" aria-label="Navegação principal">
         <a className={active === 'today' ? 'active' : ''} href="/desafio">Hoje</a>
-        <a className={active === 'community' ? 'active' : ''} href="/#comunidade">Comunidade</a>
+        <a className={active === 'community' ? 'active' : ''} href="/comunidade">Comunidade</a>
         <a className={active === 'how' ? 'active' : ''} href="/#como-funciona">Como funciona</a>
       </nav>
 
-      <button className="streak-button" type="button" aria-label="Sequência de 12 dias">
+      <a className="streak-button" href="/perfil" aria-label="Abrir meu perfil e sequência diária">
         <span className="streak-flame" aria-hidden="true">◆</span>
-        <strong>12</strong><span>dias</span>
-      </button>
+        <strong>Meu</strong><span>perfil</span>
+      </a>
     </header>
   );
 }

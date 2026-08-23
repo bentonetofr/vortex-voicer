@@ -22,6 +22,9 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
   const [playingTake, setPlayingTake] = useState<string | null>(null);
   const [isReviewing, setIsReviewing] = useState(false);
   const [finished, setFinished] = useState(false);
+  const [caption, setCaption] = useState('Minha versão do desafio de hoje.');
+  const [visibility, setVisibility] = useState<'public' | 'private'>('public');
+  const [publishState, setPublishState] = useState<'idle' | 'publishing' | 'published' | 'auth' | 'error'>('idle');
 
   const streamRef = useRef<MediaStream | null>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
@@ -215,6 +218,31 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
       ?? 'Sua versão está entrando em cena.';
   }, [challenge.script, sceneTimeMs]);
 
+  const publishSubmission = async () => {
+    if (!allRecorded || publishState === 'publishing') return;
+    setPublishState('publishing');
+    const form = new FormData();
+    form.set('mode', modeTitle === 'Modo caos' ? 'chaos' : 'performance');
+    form.set('visibility', visibility);
+    form.set('caption', caption);
+    challenge.script.forEach((line) => {
+      const take = takes[line.id];
+      if (take) form.set(`audio_${line.id}`, take.blob, `${line.id}.webm`);
+    });
+
+    try {
+      const response = await fetch('/api/submissions', { method: 'POST', body: form });
+      if (response.status === 401) {
+        setPublishState('auth');
+        return;
+      }
+      if (!response.ok) throw new Error('publish_failed');
+      setPublishState('published');
+    } catch {
+      setPublishState('error');
+    }
+  };
+
   if (phase === 'setup') {
     return (
       <section className="mic-setup" aria-labelledby="mic-title">
@@ -289,9 +317,22 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
         </div>
 
         {finished ? (
-          <div className="review-complete" aria-live="polite">
-            <span>✓</span>
-            <div><strong>Dublagem pronta</strong><small>Na próxima parte, você escolherá capa e visibilidade antes de publicar.</small></div>
+          <div className="publish-panel" aria-live="polite">
+            <div className="review-complete">
+              <span>✓</span>
+              <div><strong>Dublagem pronta</strong><small>Escolha como ela aparecerá antes de enviar para a comunidade.</small></div>
+            </div>
+            {publishState === 'published' ? (
+              <div className="published-success"><span>◆</span><div><strong>Você completou o desafio de hoje!</strong><small>Sua sequência e seu perfil já foram atualizados.</small></div><a href="/comunidade">Ver na comunidade →</a></div>
+            ) : (
+              <div className="publish-fields">
+                <label><span>Legenda</span><input value={caption} maxLength={180} onChange={(event) => setCaption(event.target.value)} /></label>
+                <fieldset><legend>Visibilidade</legend><label><input type="radio" name="visibility" checked={visibility === 'public'} onChange={() => setVisibility('public')} /><span>Pública<small>Aparece na comunidade</small></span></label><label><input type="radio" name="visibility" checked={visibility === 'private'} onChange={() => setVisibility('private')} /><span>Privada<small>Visível apenas no perfil</small></span></label></fieldset>
+                <button className="confirm-button" type="button" onClick={publishSubmission} disabled={publishState === 'publishing'}>{publishState === 'publishing' ? 'Publicando...' : 'Publicar dublagem'} <span aria-hidden="true">→</span></button>
+                {publishState === 'auth' && <p className="publish-error">Entre na sua conta para publicar. <a href="/signin-with-chatgpt?return_to=%2Festudio">Fazer login</a></p>}
+                {publishState === 'error' && <p className="publish-error">Não foi possível publicar agora. Suas tomadas continuam nesta tela; tente novamente.</p>}
+              </div>
+            )}
           </div>
         ) : (
           <p className="review-help">As três tomadas são reproduzidas automaticamente no momento certo da cena.</p>
@@ -301,7 +342,7 @@ export function RecordingStudio({ challenge }: { challenge: DailyChallenge }) {
           <button className="secondary-button" type="button" onClick={() => { stopReview(); setMicrophoneEnabled(true); setPhase('recording'); }}>
             Voltar às tomadas
           </button>
-          <button className="confirm-button" type="button" onClick={() => { stopReview(); setFinished(true); }}>
+          <button className="confirm-button" type="button" disabled={finished} onClick={() => { stopReview(); setFinished(true); }}>
             Concluir revisão <span aria-hidden="true">→</span>
           </button>
         </div>
