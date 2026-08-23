@@ -1,35 +1,13 @@
-import Image from 'next/image';
+import { DailyCountdown } from './components/daily-countdown';
+import { SiteHeader } from './components/site-header';
+import { dailyChallenge } from '../lib/daily-challenge';
 
 const soundBars = [28, 44, 65, 38, 76, 52, 88, 61, 34, 70, 49, 81, 42, 58, 31];
 
 export default function Home() {
   return (
     <main>
-      <header className="site-header">
-        <a className="brand" href="#inicio" aria-label="Vortex Voice — início">
-          <Image
-            className="brand-logo"
-            src="/vortex-voice-logo.png"
-            alt=""
-            width={512}
-            height={512}
-            priority
-          />
-          <span className="brand-name">VORTEX <strong>VOICE</strong></span>
-          <span className="beta-tag">beta</span>
-        </a>
-
-        <nav className="main-nav" aria-label="Navegação principal">
-          <a className="active" href="#hoje">Hoje</a>
-          <a href="#comunidade">Comunidade</a>
-          <a href="#como-funciona">Como funciona</a>
-        </nav>
-
-        <button className="streak-button" type="button" aria-label="Sequência de 12 dias">
-          <span className="streak-flame" aria-hidden="true">◆</span>
-          <strong>12</strong><span>dias</span>
-        </button>
-      </header>
+      <SiteHeader />
 
       <section className="hero" id="inicio">
         <div className="hero-copy">
@@ -41,7 +19,7 @@ export default function Home() {
           </p>
 
           <div className="hero-actions">
-            <a className="primary-button" href="#hoje">
+            <a className="primary-button" href="/desafio">
               <span className="mic-symbol" aria-hidden="true" />
               Dublar cena de hoje
               <span className="arrow" aria-hidden="true">→</span>
@@ -56,7 +34,7 @@ export default function Home() {
             <div className="avatar-stack" aria-hidden="true">
               <span>MA</span><span>LU</span><span>JO</span><span>+8</span>
             </div>
-            <p><strong>1.284 vozes</strong> já entraram no desafio de hoje</p>
+            <p><strong>{dailyChallenge.participantCount.toLocaleString('pt-BR')} vozes</strong> já entraram no desafio de hoje</p>
           </div>
         </div>
 
@@ -72,28 +50,28 @@ export default function Home() {
               <div className="scene-silhouette scene-silhouette-right" />
               <div className="challenge-topline">
                 <span className="daily-badge"><i /> Cena de hoje</span>
-                <span className="challenge-number">#001</span>
+                <span className="challenge-number">#{dailyChallenge.number}</span>
               </div>
-              <div className="caption-preview">“Às vezes, tudo que falta é alguém responder...”</div>
+              <div className="caption-preview">“{dailyChallenge.quote}”</div>
             </div>
 
             <div className="challenge-content">
               <div className="challenge-title-row">
-                <div><p className="content-label">DESAFIO DO DIA</p><h2>O último sinal</h2></div>
-                <span className="age-rating" aria-label="Classificação indicativa 12 anos">12</span>
+                <div><p className="content-label">DESAFIO DO DIA</p><h2>{dailyChallenge.title}</h2></div>
+                <span className="age-rating" aria-label={`Classificação indicativa ${dailyChallenge.ageRating} anos`}>{dailyChallenge.ageRating}</span>
               </div>
-              <p className="scene-description">Uma transmissão misteriosa. Uma última chance de ser ouvido.</p>
+              <p className="scene-description">{dailyChallenge.synopsis}</p>
               <div className="scene-meta" aria-label="Detalhes da cena">
-                <span><i className="clock-icon" />18 segundos</span>
-                <span><i className="mask-icon" />Drama</span>
-                <span><i className="person-icon" />1 personagem</span>
+                <span><i className="clock-icon" />{dailyChallenge.durationSeconds} segundos</span>
+                <span><i className="mask-icon" />{dailyChallenge.genre}</span>
+                <span><i className="person-icon" />{dailyChallenge.roles.length} personagem</span>
               </div>
               <div className="waveform" aria-hidden="true">
                 {soundBars.map((height, index) => <i key={index} style={{ height: `${height}%` }} />)}
               </div>
               <div className="challenge-footer">
-                <div className="countdown"><span>PRÓXIMA CENA EM</span><strong>07:42:18</strong></div>
-                <a className="round-play" href="#como-funciona" aria-label="Visualizar cena">▶</a>
+                <DailyCountdown showLabel />
+                <a className="round-play" href="/desafio" aria-label="Abrir desafio de hoje">▶</a>
               </div>
             </div>
           </article>
@@ -105,8 +83,33 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="how-it-works" id="como-funciona" aria-label="Como funciona">
+      <section className="how-it-works" aria-label="Resumo de como funciona">
         <p>Uma cena por dia</p><span /><p>Grave do seu jeito</p><span /><p>Compartilhe sua versão</p>
+      </section>
+
+      <section className="process-section" id="como-funciona">
+        <div className="section-heading">
+          <p className="content-label">SIMPLES DE ENTRAR EM CENA</p>
+          <h2>Uma pequena estreia, todos os dias.</h2>
+          <p>Você não precisa entender de dublagem. Só precisa de alguns minutos e vontade de experimentar.</p>
+        </div>
+        <div className="process-grid">
+          <article><span>01</span><i className="process-icon listen-icon" /><h3>Conheça a cena</h3><p>Assista à referência, escolha o personagem e entenda o momento.</p></article>
+          <article><span>02</span><i className="process-icon voice-icon" /><h3>Coloque sua voz</h3><p>Siga o texto ou improvise. A interpretação é inteiramente sua.</p></article>
+          <article><span>03</span><i className="process-icon share-icon" /><h3>Mostre sua versão</h3><p>Receba o vídeo pronto e veja como outras pessoas resolveram a mesma cena.</p></article>
+        </div>
+      </section>
+
+      <section className="daily-callout">
+        <div>
+          <p className="content-label">AINDA DÁ TEMPO</p>
+          <h2>Não deixe a cena de hoje passar.</h2>
+          <p>O desafio muda à meia-noite, no horário de Brasília.</p>
+        </div>
+        <div className="callout-action">
+          <DailyCountdown />
+          <a className="primary-button" href="/desafio">Começar o desafio <span className="arrow">→</span></a>
+        </div>
       </section>
     </main>
   );
