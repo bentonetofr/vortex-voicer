@@ -15,7 +15,7 @@ export default async function ProfilePage() {
   const user = await getChatGPTUser();
   if (!user) {
     return (
-      <main className="profile-page"><SiteHeader /><section className="signin-card"><span className="profile-lock">●</span><p className="content-label">SEU ESPAÇO</p><h1>Entre para guardar sua sequência.</h1><p>Seu perfil reúne desafios concluídos, reações recebidas e todas as suas dublagens.</p><a className="primary-button" href={chatGPTSignInPath('/perfil')}>Entrar com ChatGPT →</a></section></main>
+      <main className="profile-page" id="main-content"><SiteHeader /><section className="signin-card"><span className="profile-lock">●</span><p className="content-label">SEU ESPAÇO</p><h1>Entre para guardar sua sequência.</h1><p>Seu perfil reúne desafios concluídos, reações recebidas e todas as suas dublagens.</p><a className="primary-button" href={chatGPTSignInPath('/perfil')}>Entrar com ChatGPT →</a></section></main>
     );
   }
 
@@ -25,7 +25,7 @@ export default async function ProfilePage() {
   const streak = data.profile.current_streak;
 
   return (
-    <main className="profile-page">
+    <main className="profile-page" id="main-content">
       <SiteHeader />
       <div className="profile-shell">
         <section className="profile-header">

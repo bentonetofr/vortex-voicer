@@ -78,11 +78,11 @@ export function CommunityFeed() {
     <section className="community-feed" aria-label="Dublagens da comunidade">
       <div className="feed-toolbar">
         <div className="feed-filters" role="group" aria-label="Filtrar dublagens">
-          <button className={filter === 'all' ? 'active' : ''} type="button" onClick={() => setFilter('all')}>Todas</button>
-          <button className={filter === 'performance' ? 'active' : ''} type="button" onClick={() => setFilter('performance')}>Interpretação</button>
-          <button className={filter === 'chaos' ? 'active' : ''} type="button" onClick={() => setFilter('chaos')}>Modo caos</button>
+          <button aria-pressed={filter === 'all'} className={filter === 'all' ? 'active' : ''} type="button" onClick={() => setFilter('all')}>Todas</button>
+          <button aria-pressed={filter === 'performance'} className={filter === 'performance' ? 'active' : ''} type="button" onClick={() => setFilter('performance')}>Interpretação</button>
+          <button aria-pressed={filter === 'chaos'} className={filter === 'chaos' ? 'active' : ''} type="button" onClick={() => setFilter('chaos')}>Modo caos</button>
         </div>
-        <span>{visibleItems.length} versões em destaque</span>
+        <span aria-live="polite">{visibleItems.length} versões em destaque</span>
       </div>
 
       <div className="voice-grid">
@@ -101,8 +101,8 @@ export function CommunityFeed() {
               <div className="voice-author"><span className={`author-avatar tone-${item.color}`}>{item.initials}</span><div><strong>{item.name}</strong><small>{item.time}</small></div><button type="button" aria-label="Mais opções">•••</button></div>
               <p>{item.caption}</p>
               <div className="reaction-row">
-                <button className={activeReactions[item.id] === 'funny' ? 'active' : ''} type="button" onClick={() => react(item, 'funny')}>☺ <span>Engraçado</span></button>
-                <button className={activeReactions[item.id] === 'great' ? 'active' : ''} type="button" onClick={() => react(item, 'great')}>★ <span>Mandou bem</span></button>
+                <button aria-pressed={activeReactions[item.id] === 'funny'} className={activeReactions[item.id] === 'funny' ? 'active' : ''} type="button" onClick={() => react(item, 'funny')}>☺ <span>Engraçado</span></button>
+                <button aria-pressed={activeReactions[item.id] === 'great'} className={activeReactions[item.id] === 'great' ? 'active' : ''} type="button" onClick={() => react(item, 'great')}>★ <span>Mandou bem</span></button>
                 <strong>{item.reactions}</strong>
               </div>
             </div>

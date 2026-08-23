@@ -11,18 +11,18 @@ export const metadata: Metadata = {
   openGraph: {
     title: `${dailyChallenge.title} — Desafio de hoje`,
     description: dailyChallenge.synopsis,
-    images: [],
+    images: [{ url: '/vortex-voice-logo.png', width: 512, height: 512, alt: 'Símbolo do Vortex Voice' }],
   },
   twitter: {
     title: `${dailyChallenge.title} — Desafio de hoje`,
     description: dailyChallenge.synopsis,
-    images: [],
+    images: ['/vortex-voice-logo.png'],
   },
 };
 
 export default function ChallengePage() {
   return (
-    <main className="challenge-page">
+    <main className="challenge-page" id="main-content">
       <SiteHeader />
 
       <div className="challenge-page-shell">

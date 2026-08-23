@@ -6,7 +6,7 @@ const soundBars = [28, 44, 65, 38, 76, 52, 88, 61, 34, 70, 49, 81, 42, 58, 31];
 
 export default function Home() {
   return (
-    <main>
+    <main id="main-content">
       <SiteHeader />
 
       <section className="hero" id="inicio">

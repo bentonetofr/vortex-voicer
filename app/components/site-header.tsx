@@ -27,6 +27,12 @@ export function SiteHeader({ active = 'today' }: SiteHeaderProps) {
         <span className="streak-flame" aria-hidden="true">◆</span>
         <strong>Meu</strong><span>perfil</span>
       </a>
+
+      <nav className="mobile-nav" aria-label="Navegação principal no celular">
+        <a className={active === 'today' ? 'active' : ''} href="/desafio">Hoje</a>
+        <a className={active === 'community' ? 'active' : ''} href="/comunidade">Comunidade</a>
+        <a className={active === 'how' ? 'active' : ''} href="/#como-funciona">Como funciona</a>
+      </nav>
     </header>
   );
 }

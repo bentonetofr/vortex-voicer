@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function CommunityPage() {
   return (
-    <main className="community-page">
+    <main className="community-page" id="main-content">
       <SiteHeader active="community" />
       <div className="community-shell">
         <section className="community-hero">

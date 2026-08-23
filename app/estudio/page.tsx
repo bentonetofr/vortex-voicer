@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function StudioPage() {
   return (
-    <main className="studio-page">
+    <main className="studio-page" id="main-content">
       <SiteHeader />
       <div className="studio-shell">
         <div className="studio-breadcrumb">
